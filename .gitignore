@@ -1,0 +1,19 @@
+# IDE
+.idea
+
+# Testing
+coverage
+spec/reports
+spec/examples.txt
+
+# Application
+.bundle
+tmp
+
+# Build
+build
+
+# Other
+.env
+
+.byebug_history
