@@ -2,18 +2,15 @@
 Simple Rails API that needs some devop stuff on it
 
 ## Prerequisites
-- Have docker installed: https://letmegooglethat.com/?q=install+docker+on+ubuntu
 - Have RVM installed: https://letmegooglethat.com/?q=install+rvm+on+ubuntu
-
-## Running the db server (Postgresql)
-`$ docker run --name devop-postgres -e POSTGRES_PASSWORD=devop_test -d -p 5432:5432 postgres`
-
+- 
 ## Local setup
 1. Install ruby: `$ rvm install 3.0.2`
 2. `$ cd .` or `$ cd <path_to_project>` to auto-create the rvm gemset
 3. Install the dependencies: `$ bundle install`
-4. Setup development & test DBs: `$ rails db:setup`
-5. Fill with some data: `$ rails db:seed`
+4. Ensure the db is running on port 5432
+5. Setup development & test DBs: `$ rails db:setup`
+6. Fill with some data: `$ rails db:seed`
 
 ## Development
 1. Ensure the db is running on port 5432
