@@ -3,7 +3,7 @@ Simple Rails API that needs some devop stuff on it
 
 ## Prerequisites
 - Have RVM installed: https://letmegooglethat.com/?q=install+rvm+on+ubuntu
-- 
+
 ## Local setup
 1. Install ruby: `$ rvm install 3.0.2`
 2. `$ cd .` or `$ cd <path_to_project>` to auto-create the rvm gemset
