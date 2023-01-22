@@ -1,0 +1,67 @@
+version: "3"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=devop_test_development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=devop_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+# DB port is always set to 5432
+
+
+  app:
+    build: .
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres
+      # The env variables values are taken automatically through URL env
+
+#      - POSTGRES_HOST=localhost
+#      - POSTGRES_DB=devop_test_development
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=devop_test
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+# The web app can pe accessed through http://localhost:3000/
+
+
+
+
+# Jenkins used for CI part; 
+# Authetication info can be found in ssh_Jenkins file
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    ports:
+     - 8080:8080
+     - 50000:50000
+    container_name: jenkins
+    volumes:
+     - /home/tavi@tavi-VirtualBox/jenkins_compose/jenkins_configuration:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock
+
+
+# Check also jenkins-agent folder for ssh-key; used also for credentials in Jenkins pipeline
+  agent:
+    image: jenkins/ssh-agent:jdk11
+    privileged: true
+    user: root
+    container_name: agent
+    expose:
+     - 22
+    environment:
+     - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCkK+7WasdUDC+Iv2sffK1Twt8Omuq+9cbzC2jL6Ma/UI0J72bdm8mlKdSn5jSNU83EwGIE2n36B/VlN6uHy/jgm5XyVVqGop8R8aSRIsIQ72sl9VIh1+W9nY5zdgL9MRf/Uuc+uXkeh4BjYUDikAkiP+w33KgnkYQcpcaS5zr2UtT9WZf1RvZuXA7bn5/dizcyFtfkGEpOzn5W1fZroSg4FJxRe6JVauISEbqFTJ+oai/cEw0diYSj0x72Oq5YH+13LgGnXvQEJpyDzlgt4UElQ3WqN5Ak2Ovey3lZ5j1hcMAeDlxc18fMg3RV9lehlIvS7Oz95ZoYjkOdpaa7NMX1poLsMIBOiHQwp+xrvP5LO8Jxt9BPl473jj9r1y3KmOFfH57Q+WVxFD07KY0omlcp2yHRtm8Fo5mfL714YJmkGmxw1gL/Hf2qGIPZ/x9VBPDQ5FzoDaOUx5XzFj0MIvba36j79ea4egjBoGhUibZqTrr9uDL9sKugCoFL/Pg2G38= tavi@tavi-VirtualBox
+
+
+volumes:
+  dbdata:
