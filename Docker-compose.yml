@@ -1,0 +1,36 @@
+version: "3"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=devop_test_development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=devop_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+# DB port is always set to 5432
+
+  app:
+    build: .
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://postgres:devop_test@db:5432/postgres
+      # The env variables values are taken automatically through URL env
+
+      #- POSTGRES_HOST=localhost
+      #- POSTGRES_DB=devop_test_development
+      #- POSTGRES_USER=postgres
+      #- POSTGRES_PASSWORD=devop_test
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+# The web app can pe accessed through http://localhost:3000/
+
+volumes:
+  dbdata:
